@@ -75,14 +75,15 @@ class Tesserae(object):
     def __initialize(self, query, targets):
         self.nseq = len(targets) + 1
         self.maxl = max_length(query, targets)
+        self.qlen = len(query)
 
-        self.vt_m = np.full([self.nseq, self.maxl + 1, self.maxl + 1], SMALL, dtype=np.float64)
-        self.vt_i = np.full([self.nseq, self.maxl + 1, self.maxl + 1], SMALL, dtype=np.float64)
-        self.vt_d = np.full([self.nseq, self.maxl + 1, self.maxl + 1], SMALL, dtype=np.float64)
+        self.vt_m = np.full([self.nseq, self.maxl + 1, self.qlen + 2], SMALL, dtype=np.float64)
+        self.vt_i = np.full([self.nseq, self.maxl + 1, self.qlen + 2], SMALL, dtype=np.float64)
+        self.vt_d = np.full([self.nseq, self.maxl + 1, self.qlen + 2], SMALL, dtype=np.float64)
 
-        self.tb_m = np.zeros([self.nseq, self.maxl + 1, self.maxl + 1], dtype=np.float64)
-        self.tb_i = np.zeros([self.nseq, self.maxl + 1, self.maxl + 1], dtype=np.float64)
-        self.tb_d = np.zeros([self.nseq, self.maxl + 1, self.maxl + 1], dtype=np.float64)
+        self.tb_m = np.zeros([self.nseq, self.maxl + 1, self.qlen + 2], dtype=np.float64)
+        self.tb_i = np.zeros([self.nseq, self.maxl + 1, self.qlen + 2], dtype=np.float64)
+        self.tb_d = np.zeros([self.nseq, self.maxl + 1, self.qlen + 2], dtype=np.float64)
 
         self.who_copy = np.ones([self.nseq], dtype=np.int64)
         self.who_copy[0] = 0
@@ -125,12 +126,12 @@ class Tesserae(object):
     def __align_all(self, panel):
         query = panel["query"]
 
-        l1 = len(query)
+        l1 = self.qlen
         size_l = 0.0
         for target in panel.values():
             size_l += len(target)
 
-        size_l -= len(query)
+        size_l -= self.qlen
         lsize_l = np.log(size_l)
 
         max_r, pos_max, state_max, who_max = self.__initialization(query, panel, lsize_l)
