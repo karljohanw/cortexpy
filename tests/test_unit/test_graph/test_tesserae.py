@@ -8,8 +8,10 @@ class TestTesserae:
         targets = ["GTAGGCGAGTCCCGTTTATA", "CCACAGAAGATGACGCCATT"]
 
         # when
-        t = Tesserae()
-        p = t.align(query, targets)
+        t1 = Tesserae(mem_limit=False)
+        t2 = Tesserae(mem_limit=True)
+        p = t1.align(query, targets)
+        q = t2.align(query, targets)
 
         # then
         assert len(p) == 3
@@ -23,3 +25,6 @@ class TestTesserae:
         assert p[2][1] == '       AGATGACGCCAT'
         assert p[2][2] == 7
         assert p[2][3] == 18
+
+        assert p == q
+        assert t1.llk == t2.llk

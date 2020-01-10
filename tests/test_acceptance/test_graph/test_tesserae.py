@@ -29,8 +29,10 @@ class TestTesseraeAcceptance:
                        random_dna_string(partial_len) + "".join(query[partial_len:total_len])]
 
             # when
-            t = Tesserae()
-            p = t.align(query, targets)
+            t1 = Tesserae(mem_limit=False)
+            t2 = Tesserae(mem_limit=True)
+            p = t1.align(query, targets)
+            q = t2.align(query, targets)
 
             # then
             assert len(p) == 3
@@ -44,3 +46,6 @@ class TestTesseraeAcceptance:
             assert p[2][1] == repeat(" ", partial_len) + targets[1][partial_len:total_len]
             assert p[2][2] == partial_len
             assert p[2][3] == total_len - 1
+
+            assert p == q
+            assert t1.llk == t2.llk
