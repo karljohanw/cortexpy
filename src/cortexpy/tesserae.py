@@ -167,10 +167,10 @@ class Tesserae(object):
         while self.mem_limit and self.saved_states:
             max_r, pos_max_n, state_max_n, who_max_n, pos_target_n = self.saved_states.pop()
             idx = len(self.saved_states)
-            self.vt_m[1] = np.copy(self.saved_vt_m[idx])
-            self.vt_i[1] = np.copy(self.saved_vt_i[idx])
-            self.vt_d[1] = np.copy(self.saved_vt_d[idx])
-            self.__recurrence(query, panel, lsize_l, l2, max_r, pos_max_n, state_max_n, who_max_n, offset=pos_target_n, l0=1, store_states=False)
+            self.vt_m[1-(idx==0)] = np.copy(self.saved_vt_m[idx])
+            self.vt_i[1-(idx==0)] = np.copy(self.saved_vt_i[idx])
+            self.vt_d[1-(idx==0)] = np.copy(self.saved_vt_d[idx])
+            self.__recurrence(query, panel, lsize_l, l2, max_r, pos_max_n, state_max_n, who_max_n, offset=pos_target_n, l0=1+(idx==0), store_states=False)
             cp, pos_max, who_max, state_max = self.__termination(l2, pos_max, state_max, who_max, cp)
         self.__render(cp + 1, panel)
 
@@ -432,6 +432,9 @@ class Tesserae(object):
 
         if self.mem_limit:
             self.saved_states.append((max_r, pos_max, state_max, who_max, 0))
+            self.saved_vt_m[0] = np.copy(self.vt_m[0])
+            self.saved_vt_i[0] = np.copy(self.vt_i[0])
+            self.saved_vt_d[0] = np.copy(self.vt_d[0])
 
         return max_r, pos_max, state_max, who_max
 
