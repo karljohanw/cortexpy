@@ -1,6 +1,7 @@
 from cortexpy.tesserae import Tesserae
 from numpy import sqrt
 
+
 class TestTesserae:
     def __init__(self):
         # given
